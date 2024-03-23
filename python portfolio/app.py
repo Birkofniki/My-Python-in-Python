@@ -6,7 +6,7 @@ from PIL import Image
 current_dir=Path(_file_).parent if "_file_" in locals() else Path.cwd()
 css_file=current_dir/"styles"/"main.css"
 resume_file=current_dir/"assets"/"Augastine Ndeti A.pdf"
-profile_pic=current_dir/"assets"/"yellow bg profile-pic (3).png"
+profile_pic=current_dir/"assets"/"profile-pic.png"
 
 
 # ---GENERAL SETTINGS ---
@@ -37,4 +37,59 @@ PROJECTS={
 }
 
 st.set_page_config(page_title=PAGE_TITLE,page_icon=PAGE_ICON)
-st.title("Hello there!")
+# ---loading the CSS, Pdf & Profile Pic
+with open(css_file) as f:
+    st.markdown("<style>{}</style>".format(f.read()), unsafe_allow_html=True)
+    with open(resume_file,"rb") as pdf_file:
+        PDFbyte=pdf_file.read()
+        profile_pic=Image.open(profile_pic)    
+
+# ---Hero Section Creation --- 
+col1,col2= st.columns(2,gap="small") 
+with col1:
+    st.image(profile_pic,width=230)
+
+    with col2:
+        st.title(NAME)
+        st.write(DESCRIPTION)
+        st.download_button(
+            label="Download Resume",
+            data=PDFbyte,
+            file_name=resume_file.name,
+            mime="application/octet-stream",
+        )
+        st.write("📧", EMAIL)
+        
+    # ---Social Links ---
+    st.write("#")
+    cols=st.columns(len(SOCIAL_MEDIA))
+    for index, (platform, link) in enumerate(SOCIAL_MEDIA.items()):
+        cols[index].write(f"[{platform}]({link})")
+
+    # ---Experience & Qualifications ---
+    st.write("#")
+    st.subheader("Experience & Qualifications")
+    st.write(
+        """
+- Business Development Manager at Ngeni LABs, Kenya; 🚀May 2023 ➡ January 2024
+    - ✔Optimized internal lead generation process by 20%, resulting in a 15% increase in sales conversions.
+    - ✔Developed and implemented a new customer onboarding process, reducing onboarding time by 30%.
+    - ✔Analyzed customer data to identify trends and opportunities for process improvement.
+    - ✔Collaborated with cross-functional teams to streamline internal workflows and communication.
+
+- Freelance Writer (CourseHero, WriterPro.com, & Writerbay) 🚀November 2021 ➡ April 2023 
+    - ✔Conducted research and analysis on various topics related to Python programming and web development.
+    - ✔Developed detailed process flows and documentation for complex business operations.
+    - ✔Communicated effectively with clients to understand their needs and deliver high-quality work on time.
+    - ✔Managed multiple projects simultaneously while meeting deadlines and ensuring accuracy.
+
+- I.T. Support Officer-Intern (Makueni County Government, Wote, Kenya)	🚀May 2021 ➡ Oct 2021
+    - ✔Provided technical support for County computers, networks, and software.
+    - ✔Optimized network infrastructure by identifying and resolving network bottlenecks, leading to a 10% improvement in network performance.
+    - ✔Conducted regular process audits and identified opportunities for streamlining IT operations.
+    - ✔Configured IFMIS (Integrated Financial Management Information System) network ports.
+
+        """
+        )
+    
+        
